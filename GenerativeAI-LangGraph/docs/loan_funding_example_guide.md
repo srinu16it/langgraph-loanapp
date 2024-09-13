@@ -15,7 +15,7 @@ from langgraph import models, utils
 from agents import loan_funding_agent
 ```
 
-## Step 2: Initialize the LangGraph
+## Step 2: Initialize the LangGraph 
 
 Next, initialize the LangGraph with the necessary parameters.
 

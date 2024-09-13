@@ -1,24 +1,43 @@
 import unittest
-from src.langgraph import models
+from src.langgraph.models import LangGraph, Node, Edge
 
 class TestModels(unittest.TestCase):
 
     def setUp(self):
-        # This method will be called before each test. You can use it to set up any state that your tests need.
-        pass
+        self.graph = LangGraph()
 
-    def tearDown(self):
-        # This method will be called after each test. You can use it to clean up any resources your tests have used.
-        pass
+    def test_add_node(self):
+        self.graph.add_node("A")
+        self.assertIn("A", self.graph.nodes)
+        self.assertIsInstance(self.graph.nodes["A"], Node)
 
-    def test_model1(self):
-        # This is a placeholder for a test. Replace 'model1' with the name of your model.
-        # You should create a new method like this for each test you want to run.
-        pass
+    def test_add_edge(self):
+        self.graph.add_edge("A", "B", 1)
+        self.assertIn("A", self.graph.nodes)
+        self.assertIn("B", self.graph.nodes)
+        self.assertEqual(len(self.graph.nodes["A"].edges), 1)
+        self.assertIsInstance(self.graph.nodes["A"].edges[0], Edge)
+        self.assertEqual(self.graph.nodes["A"].edges[0].node, self.graph.nodes["B"])
+        self.assertEqual(self.graph.nodes["A"].edges[0].weight, 1)
 
-    def test_model2(self):
-        # This is a placeholder for another test. Replace 'model2' with the name of your other model.
-        pass
+    def test_process_loan(self):
+        result = self.graph.process_loan(10000, 12, 0.05)
+        self.assertIn("Application", self.graph.nodes)
+        self.assertIn("Evaluation", self.graph.nodes)
+        self.assertIn("Decision", self.graph.nodes)
+        self.assertIn("Funding", self.graph.nodes)
+        self.assertIsInstance(result, str)
+        self.assertIn("10000", result)
+        self.assertIn("12", result)
+        self.assertIn("5.0", result)
+
+    def test_process_large_loan(self):
+        result = self.graph.process_loan(150000, 36, 0.04)
+        self.assertIn("High-Value Review", self.graph.nodes)
+        self.assertIsInstance(result, str)
+        self.assertIn("150000", result)
+        self.assertIn("36", result)
+        self.assertIn("4.0", result)
 
 if __name__ == '__main__':
     unittest.main()
